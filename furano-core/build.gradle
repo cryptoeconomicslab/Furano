@@ -6,7 +6,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // local
-    implementation project(':furano-contract')
+    implementation project(':furano-common')
 }
 
 repositories {

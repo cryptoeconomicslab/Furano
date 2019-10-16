@@ -34,5 +34,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     // local
-    implementation project(':furano-contract')
+    implementation project(':furano-common')
 }

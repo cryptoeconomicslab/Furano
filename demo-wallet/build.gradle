@@ -35,5 +35,5 @@ dependencies {
     // local
     implementation project(':furano-core')
     implementation project(':furano-android')
-    implementation project(':furano-contract')
+    implementation project(':furano-common')
 }
