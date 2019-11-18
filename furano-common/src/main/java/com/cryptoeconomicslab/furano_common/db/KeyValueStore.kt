@@ -1,11 +1,12 @@
 package com.cryptoeconomicslab.furano_common.db
 
 import com.cryptoeconomicslab.furano_common.types.Bytes
-import kotlinx.coroutines.Deferred
 
 interface KeyValueStore {
-    fun getAsync(key: Bytes): Deferred<Bytes>
-    fun putAsync(key: Bytes, value: Bytes): Deferred<Bytes>
-    fun delAsync(key: Bytes): Deferred<Unit>
+    fun get(key: Bytes): Bytes
+    fun put(key: Bytes, value: Bytes)
+    fun del(key: Bytes)
+    fun batch(operations: List<BatchOperation>)
+    fun iter(bounds: Bytes): Iterator<Map.Entry<Bytes, Bytes>>
     fun bucket(key: Bytes): KeyValueStore
 }
