@@ -5,12 +5,13 @@ import com.cryptoeconomicslab.furano_common.db.KeyValueStore
 import com.cryptoeconomicslab.furano_common.db.range.RangeRecord
 import com.cryptoeconomicslab.furano_common.db.range.RangeStore
 import com.cryptoeconomicslab.furano_common.types.Bytes
-import com.cryptoeconomicslab.furano_common.types.convertFromLong
+import com.cryptoeconomicslab.furano_common.types.convertFromBigInteger
+import java.math.BigInteger
 
 
 class RangeDb(val kvs: KeyValueStore) : RangeStore {
-    override fun get(start: Long, end: Long): Array<RangeRecord> {
-        val iter = kvs.iter(convertFromLong(start))
+    override fun get(start: BigInteger, end: BigInteger): Array<RangeRecord> {
+        val iter = kvs.iter(convertFromBigInteger(start))
         val keyValue = if (iter.hasNext()) {
             iter.next()
         } else {
@@ -31,7 +32,7 @@ class RangeDb(val kvs: KeyValueStore) : RangeStore {
         return results.toTypedArray()
     }
 
-    override fun put(start: Long, end: Long, value: Bytes) {
+    override fun put(start: BigInteger, end: BigInteger, value: Bytes) {
         val inputRanges = this.delBatch(start, end)
         val outputRanges = mutableListOf<RangeRecord>()
 
@@ -70,7 +71,7 @@ class RangeDb(val kvs: KeyValueStore) : RangeStore {
         this.putBatch(outputRanges.toTypedArray())
     }
 
-    override fun del(start: Long, end: Long) {
+    override fun del(start: BigInteger, end: BigInteger) {
         this.delBatch(start, end)
     }
 
@@ -79,7 +80,7 @@ class RangeDb(val kvs: KeyValueStore) : RangeStore {
     private fun putBatch(ranges: Array<RangeRecord>) {
         val operations = ranges.map {
             BatchOperation.PutBatchOperation(
-                key = convertFromLong(it.end),
+                key = convertFromBigInteger(it.end),
                 values = it.encode()
             )
         }
@@ -87,11 +88,11 @@ class RangeDb(val kvs: KeyValueStore) : RangeStore {
         this.kvs.batch(operations = operations)
     }
 
-    private fun delBatch(start: Long, end: Long): Array<RangeRecord> {
+    private fun delBatch(start: BigInteger, end: BigInteger): Array<RangeRecord> {
         val deletedTargets = this.get(start, end)
         val operations = deletedTargets.map {
             BatchOperation.DelBatchOperation(
-                key = convertFromLong(it.end)
+                key = convertFromBigInteger(it.end)
             )
         }
 

@@ -9,12 +9,13 @@ import com.cryptoeconomicslab.furano_common.error.UnexpectedParamsException
 import com.cryptoeconomicslab.furano_common.types.Bytes
 import com.cryptoeconomicslab.furano_common.types.convertFromString
 import com.cryptoeconomicslab.furano_common.types.convertToString
+import java.math.BigInteger
 
 data class RangeRecord(
     @Json(name = "start")
-    val start: Long,
+    val start: BigInteger,
     @Json(name = "end")
-    val end: Long,
+    val end: BigInteger,
     @Json(name = "value")
     val value: Bytes
 ) {
@@ -23,26 +24,39 @@ data class RangeRecord(
             val jsonStr = bytes.toString()
 
             return Klaxon().converter(RangeRecordConverter())
-                    .parse<RangeRecord>(jsonStr)
+                .parse<RangeRecord>(jsonStr)
                 ?: throw FailedDecodeException("Failed to decode json")
         }
     }
 
     fun encode(): Bytes {
         val jsonStr = Klaxon().converter(RangeRecordConverter())
-                .toJsonString(this)
+            .toJsonString(this)
         return convertFromString(jsonStr)
     }
 
-    fun intersect(start: Long, end: Long): Boolean {
-        if (start < 0 || end < 0) throw UnexpectedParamsException("start and end should be not negative")
+    fun intersect(start: BigInteger, end: BigInteger): Boolean {
+        if (start < BigInteger.ZERO || end < BigInteger.ZERO) throw UnexpectedParamsException("start and end should be not negative")
         if (end < start) throw UnexpectedParamsException("start should not be larger than end")
 
-        // `Range` include end and we don't want to according to the spec
-        val requestedRange = LongRange(start, end - 1)
-        val recordRange = LongRange(this.start, this.end - 1)
+        /*
+        These are the only cases which does not intersect.
+        Larger range is the range for db and smaller one is given one
+                             ________________
+           _____________    |                |
+          |             |   |                |
+        ----------------------------------------
 
-        return requestedRange.intersect(recordRange).isNotEmpty()
+           _____________
+          |             |    ________________
+          |             |   |                |
+        ----------------------------------------
+         */
+
+        val isLeftWithNoIntersect = end <= this.start
+        val isRightWithNoIntersect = start >= this.end
+
+        return !isLeftWithNoIntersect && !isRightWithNoIntersect
     }
 
     override fun equals(other: Any?): Boolean {
@@ -70,8 +84,8 @@ class RangeRecordConverter : Converter {
     override fun canConvert(cls: Class<*>): Boolean = cls == RangeRecord::class.java
 
     override fun fromJson(jv: JsonValue): RangeRecord = RangeRecord(
-        start = jv.objInt("start").toLong(),
-        end = jv.objInt("start").toLong(),
+        start = jv.objString("start").toBigInteger(),
+        end = jv.objString("end").toBigInteger(),
         value = convertFromString(jv.objString("value"))
     )
 

@@ -7,42 +7,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
-import java.nio.charset.Charset
+import java.math.BigInteger
 import kotlin.properties.Delegates
 
 class TestRangeRecord {
-
-    class TestEncode {
-
-        lateinit var target: RangeRecord
-
-        @Before
-        fun setUp() {
-            target = RangeRecord(
-                start = 100,
-                end = 200,
-                value = convertFromString("Hello World")
-            )
-        }
-
-        @Test
-        fun `given normal params, expected to be encoded`() {
-            // given
-            val encodedTargetInString = target.encode().toString(Charset.defaultCharset())
-
-            // expected
-            val expected = """
-            {
-                "start" : 100,
-                "end" : 200,
-                "value" : Hello World
-            }
-            """.trimIndent()
-
-            // assert
-            assertThat(encodedTargetInString).isEqualTo(expected)
-        }
-    }
 
     class TestIntersect {
 
@@ -50,14 +18,14 @@ class TestRangeRecord {
         var expected: Boolean by Delegates.notNull()
 
         // given
-        var start: Long by Delegates.notNull()
-        var end: Long by Delegates.notNull()
+        var start: BigInteger by Delegates.notNull()
+        var end: BigInteger by Delegates.notNull()
 
         @Before
         fun setUp() {
             target = RangeRecord(
-                start = 100,
-                end = 200,
+                start = BigInteger.valueOf(100),
+                end = BigInteger.valueOf(200),
                 value = convertFromString("Hello World")
             )
         }
@@ -65,8 +33,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (0, 50), expected to return false`() {
             // given
-            start = 0
-            end = 50
+            start = BigInteger.valueOf(0)
+            end = BigInteger.valueOf(50)
 
             // expected
             expected = false
@@ -79,8 +47,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (0, 100), expected to return false`() {
             // given
-            start = 0
-            end = 100
+            start = BigInteger.valueOf(0)
+            end = BigInteger.valueOf(100)
 
             // expected
             expected = false
@@ -93,8 +61,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (0, 150), expected to return true`() {
             // given
-            start = 0
-            end = 150
+            start = BigInteger.valueOf(0)
+            end = BigInteger.valueOf(150)
 
             // expected
             expected = true
@@ -107,8 +75,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (0, 200), expected to return true`() {
             // given
-            start = 0
-            end = 200
+            start = BigInteger.valueOf(0)
+            end = BigInteger.valueOf(200)
 
             // expected
             expected = true
@@ -121,8 +89,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (0, 300), expected to return true`() {
             // given
-            start = 0
-            end = 300
+            start = BigInteger.valueOf(0)
+            end = BigInteger.valueOf(300)
 
             // expected
             expected = true
@@ -135,8 +103,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (100, 200), expected to return true`() {
             // given
-            start = 100
-            end = 200
+            start = BigInteger.valueOf(100)
+            end = BigInteger.valueOf(200)
 
             // expected
             expected = true
@@ -149,8 +117,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (100, 150), expected to return true`() {
             // given
-            start = 100
-            end = 150
+            start = BigInteger.valueOf(100)
+            end = BigInteger.valueOf(150)
 
             // expected
             expected = true
@@ -163,8 +131,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (100, 300), expected to return true`() {
             // given
-            start = 100
-            end = 300
+            start = BigInteger.valueOf(100)
+            end = BigInteger.valueOf(300)
 
             // expected
             expected = true
@@ -177,8 +145,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (150, 200), expected to return true`() {
             // given
-            start = 150
-            end = 200
+            start = BigInteger.valueOf(150)
+            end = BigInteger.valueOf(200)
 
             // expected
             expected = true
@@ -191,8 +159,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (150, 300), expected to return true`() {
             // given
-            start = 150
-            end = 300
+            start = BigInteger.valueOf(150)
+            end = BigInteger.valueOf(300)
 
             // expected
             expected = true
@@ -205,8 +173,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (200, 300), expected to return false`() {
             // given
-            start = 200
-            end = 300
+            start = BigInteger.valueOf(200)
+            end = BigInteger.valueOf(300)
 
             // expected
             expected = false
@@ -219,8 +187,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (-100, 0), expected to throw exception when start is negative`() {
             // given
-            start = -100
-            end = 0
+            start = BigInteger.valueOf(-100)
+            end = BigInteger.valueOf(0)
 
             // assert
             try {
@@ -236,8 +204,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (-200, -100), expected to throw exception when end is negative`() {
             // given
-            start = -200
-            end = -100
+            start = BigInteger.valueOf(-200)
+            end = BigInteger.valueOf(-100)
 
             // assert
             try {
@@ -253,8 +221,8 @@ class TestRangeRecord {
         @Test
         fun `given (start, end) = (200, 100), expected to throw exception when end is greater than start`() {
             // given
-            start = 200
-            end = 100
+            start = BigInteger.valueOf(200)
+            end = BigInteger.valueOf(100)
 
             // assert
             try {
