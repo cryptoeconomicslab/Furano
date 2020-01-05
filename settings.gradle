@@ -1,2 +1,2 @@
-include ':demo-wallet', ':furano-android', ':furano-common', ':furano-core'
+include ':demo-wallet', ':furano-android', ':furano-spec', ':furano-core'
 rootProject.name='Furano'

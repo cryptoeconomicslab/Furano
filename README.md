@@ -7,8 +7,8 @@ This project is still in progress.
 .
 ├── demo-wallet     # demo app using furano libraries.
 ├── furano-android  # module which uses android features. e.g db, network and etc...
-├── furano-common   # common interface module. This is shared by other modules so that it only depends on interfaces.
-└── furano-core     # core package for ovm including core business logics.
+├── furano-spec     # interfaces for components like db and network and etc...
+└── furano-core     # core package for ovm including primitive types and business logic
 ```
 
 # Architecture Overview

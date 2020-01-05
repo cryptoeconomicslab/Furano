@@ -4,15 +4,15 @@ import com.cryptoeconomicslab.furano_common.db.BatchOperation
 import com.cryptoeconomicslab.furano_common.db.KeyValueStore
 import com.cryptoeconomicslab.furano_common.db.range.RangeRecord
 import com.cryptoeconomicslab.furano_common.db.range.RangeStore
-import com.cryptoeconomicslab.furano_common.types.Bytes
-import com.cryptoeconomicslab.furano_common.types.convertFromBigInteger
+import com.cryptoeconomicslab.furano_core.types.Bytes
+import com.cryptoeconomicslab.furano_core.types.convertFromBigInteger
 import java.math.BigInteger
 
 
 class RangeDb(val kvs: KeyValueStore) : RangeStore {
     override fun get(start: BigInteger, end: BigInteger): Array<RangeRecord> {
         val iter = kvs.iter(convertFromBigInteger(start))
-        val keyValue = if (iter.hasNext()) {
+        var keyValue = if (iter.hasNext()) {
             iter.next()
         } else {
             null
@@ -22,7 +22,7 @@ class RangeDb(val kvs: KeyValueStore) : RangeStore {
         var rangeRecord = RangeRecord.decode(keyValue.value)
         while (rangeRecord.intersect(start, end)) {
             results.add(rangeRecord)
-            val keyValue = if (iter.hasNext()) {
+            keyValue = if (iter.hasNext()) {
                 iter.next()
             } else {
                 null
