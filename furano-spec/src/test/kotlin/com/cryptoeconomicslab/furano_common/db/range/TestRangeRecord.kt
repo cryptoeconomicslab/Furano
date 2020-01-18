@@ -1,7 +1,7 @@
 package com.cryptoeconomicslab.furano_common.db.range
 
 import com.cryptoeconomicslab.furano_common.error.UnexpectedParamsException
-import com.cryptoeconomicslab.furano_core.types.convertFromString
+import com.cryptoeconomicslab.furano_core.primitive.Bytes
 import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
@@ -26,7 +26,7 @@ class TestRangeRecord {
             target = RangeRecord(
                 start = BigInteger.valueOf(100),
                 end = BigInteger.valueOf(200),
-                value = convertFromString("Hello World")
+                value = Bytes("Hello World".toByteArray())
             )
         }
 

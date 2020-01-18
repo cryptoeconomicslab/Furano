@@ -2,7 +2,7 @@ package com.cryptoeconomicslab.furano_android.db
 
 import com.cryptoeconomicslab.furano_common.db.BatchOperation
 import com.cryptoeconomicslab.furano_common.db.KeyValueStore
-import com.cryptoeconomicslab.furano_core.types.Bytes
+import com.cryptoeconomicslab.furano_core.primitive.Bytes
 import org.iq80.leveldb.DB
 import org.iq80.leveldb.Options
 import org.iq80.leveldb.impl.Iq80DBFactory

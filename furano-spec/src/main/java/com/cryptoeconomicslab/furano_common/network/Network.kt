@@ -1,6 +1,6 @@
 package com.cryptoeconomicslab.furano_common.network
 
-import com.cryptoeconomicslab.furano_core.types.Bytes
+import com.cryptoeconomicslab.furano_core.primitive.Bytes
 
 interface Network {
     fun publish(key: Bytes, value: Bytes)

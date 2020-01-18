@@ -1,6 +1,6 @@
 package com.cryptoeconomicslab.furano_common.db.range
 
-import com.cryptoeconomicslab.furano_core.types.Bytes
+import com.cryptoeconomicslab.furano_core.primitive.Bytes
 import java.math.BigInteger
 
 interface RangeStore {
