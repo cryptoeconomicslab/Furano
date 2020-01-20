@@ -6,9 +6,7 @@ import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
 import com.cryptoeconomicslab.furano_common.error.FailedDecodeException
 import com.cryptoeconomicslab.furano_common.error.UnexpectedParamsException
-import com.cryptoeconomicslab.furano_core.types.Bytes
-import com.cryptoeconomicslab.furano_core.types.convertFromString
-import com.cryptoeconomicslab.furano_core.types.convertToString
+import com.cryptoeconomicslab.furano_core.primitive.Bytes
 import java.math.BigInteger
 
 data class RangeRecord(
@@ -30,9 +28,12 @@ data class RangeRecord(
     }
 
     fun encode(): Bytes {
-        val jsonStr = Klaxon().converter(RangeRecordConverter())
+        val jsonStrInBytes = Klaxon().converter(RangeRecordConverter())
             .toJsonString(this)
-        return convertFromString(jsonStr)
+            .toByteArray()
+        return Bytes(
+            data = jsonStrInBytes
+        )
     }
 
     fun intersect(start: BigInteger, end: BigInteger): Boolean {
@@ -58,26 +59,6 @@ data class RangeRecord(
 
         return !isLeftWithNoIntersect && !isRightWithNoIntersect
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as RangeRecord
-
-        if (start != other.start) return false
-        if (end != other.end) return false
-        if (!value.contentEquals(other.value)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = start.hashCode()
-        result = 31 * result + end.hashCode()
-        result = 31 * result + value.contentHashCode()
-        return result
-    }
 }
 
 class RangeRecordConverter : Converter {
@@ -86,7 +67,9 @@ class RangeRecordConverter : Converter {
     override fun fromJson(jv: JsonValue): RangeRecord = RangeRecord(
         start = jv.objString("start").toBigInteger(),
         end = jv.objString("end").toBigInteger(),
-        value = convertFromString(jv.objString("value"))
+        value = Bytes(
+            data = jv.objString("value").toByteArray()
+        )
     )
 
     override fun toJson(value: Any): String {
@@ -95,7 +78,7 @@ class RangeRecordConverter : Converter {
             {
                 "start" : ${rangeRecord.start},
                 "end" : ${rangeRecord.end},
-                "value" : ${rangeRecord.value.convertToString()}
+                "value" : ${rangeRecord.value}
             }
         """.trimIndent()
     }
